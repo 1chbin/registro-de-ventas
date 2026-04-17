@@ -14,8 +14,8 @@ export class ComerciosController {
   }
 
   @Get ("/:id")
-    findById(@Param("id") id: number): Comercio {
-      return this.comerciosService.buscarComercioPorId(id);
+    findById(@Param("id") id: string): Comercio {
+      return this.comerciosService.buscarComercioPorId(Number(id));
     }
 
   @Post ()
@@ -24,13 +24,13 @@ export class ComerciosController {
     }
 
   @Put("/:id")
-    update(@Param("id") id: number, @Body() body: UpdateComercioDTO): boolean {
-      return this.comerciosService.modificarComercio(id, body);
+    update(@Param("id") id: string, @Body() body: UpdateComercioDTO): boolean {
+      return this.comerciosService.modificarComercio(Number(id), body);
     }
 
   @Delete("/:id")
-    delete(@Param("id") id: number): boolean {
-      return this.comerciosService.eliminarComercio(id);
+    delete(@Param("id") id: string): boolean {
+      return this.comerciosService.eliminarComercio(Number(id));
     }
 
 }

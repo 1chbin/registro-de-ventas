@@ -29,7 +29,6 @@ export class ComerciosService {
 
     modificarComercio(id: number, body: UpdateComercioDTO): boolean {
         const comercioAModificar = this.repository.findById(id);
-        return true;
 
         if (!comercioAModificar) {
             return false;

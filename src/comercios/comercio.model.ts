@@ -1,5 +1,5 @@
 export class Comercio {
-    id: number;
+    id!: number;
     fechaAlta: Date;
     nombre: string;
     
