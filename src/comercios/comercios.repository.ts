@@ -1,34 +1,34 @@
 import { Injectable } from "@nestjs/common";
-import { Comercio } from "./comercio.model";
+import { Comercio, ComercioDocument } from "./comercio.model";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model } from "mongoose";
 
 @Injectable()
     export class ComerciosRepository {
-        private proximoId = 1;
-        private comercios: Comercio[] = [];
 
-        save(comercio: Comercio){
-            comercio.setId(this.proximoId);
-            this.comercios.push(comercio);
-            this.proximoId++;
+        constructor(
+            @InjectModel(Comercio.name) private readonly comercioModel: Model<ComercioDocument>
+        ) {}
+
+        async save(comercio: Comercio): Promise<Comercio>{
+            const comercioCreado = await this.comercioModel.create(comercio);
+            return comercioCreado.toObject();
         }
 
-        update(comercio: Comercio){
-            //NO es relevante
+        async update(id: string, comercio: Partial<Comercio>): Promise<Comercio | null>{
+            return await this.comercioModel.findByIdAndUpdate(id, comercio, { runValidators: true}).lean().exec();
         }
 
-        findAll() {
-            return this.comercios;
+        async findAll(): Promise<Comercio[]> {
+            return await this.comercioModel.find().lean().exec();
         }
 
-        findById(id: number): Comercio {
-            const comercio = this.comercios.find(c => c.id === id);
-            if (!comercio) {
-                throw new Error(`Comercio with id ${id} not found`);
-            }
-            return comercio;
+        async findById(id: string): Promise<Comercio | null> {
+            return await this.comercioModel.findById(id).lean().exec();
         }
 
-        delete(id: number) {
-            this.comercios = this.comercios.filter(c => c.id !== id);
+        async delete(id: string): Promise<boolean> {
+            const eliminado = await this.comercioModel.findByIdAndDelete(id).lean().exec();
+            return Boolean(eliminado);
         }
     }

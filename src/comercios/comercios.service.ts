@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Comercio } from './comercio.model';
 import { UpdateComercioDTO } from './dto/update.comercio.dto';
 import { ComerciosRepository } from './comercios.repository';
@@ -9,39 +9,40 @@ export class ComerciosService {
 
     constructor(private readonly repository: ComerciosRepository) {}
 
-    buscarTodosLosComercios() {
-        return this.repository.findAll();
+    async buscarTodosLosComercios(): Promise<Comercio[]> {
+        return await this.repository.findAll();
     }
 
-    buscarComercioPorId(id: number): Comercio {
-        const comercioBuscado = this.repository.findById(id);
-        if(comercioBuscado != undefined) {
+    async buscarComercioPorId(id: string): Promise<Comercio | null> {
+        const comercioBuscado = await this.repository.findById(id);
+        if(comercioBuscado != undefined && comercioBuscado !== null) {
             return comercioBuscado;
         }
-        throw new Error(`Comercio with id ${id} not found`);
+        throw new NotFoundException('Comercio no encontrado')
     }
 
-    crearComercio(body: CreateComercioDTO): boolean {
+    async crearComercio(body: CreateComercioDTO): Promise<Comercio> {
         const comercioCreado = new Comercio(body.nombre);
-        this.repository.save(comercioCreado);
-        return true
+        return await this.repository.save(comercioCreado);
     }
 
-    modificarComercio(id: number, body: UpdateComercioDTO): boolean {
-        const comercioAModificar = this.repository.findById(id);
+    async modificarComercio(id: string, body: UpdateComercioDTO): Promise<Comercio> {
+        const actualizado = await this.repository.update(id, body)
 
-        if (!comercioAModificar) {
-            return false;
+        if(!actualizado){
+            throw new NotFoundException('Comercio no encontrado');
         }
 
-        comercioAModificar.nombre = body.nombre;
-        this.repository.update(comercioAModificar);
-
-        return true;
+        return actualizado;
     }
 
-    eliminarComercio(id:number): boolean {
-        this.repository.delete(id);
+    async eliminarComercio(id:string): Promise<boolean> {
+        const eliminado = await this.repository.delete(id);
+
+        if(!eliminado){
+            throw new NotFoundException('Comercio no encontrado');
+        }
+        
         return true;
     }
 }

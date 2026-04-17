@@ -9,28 +9,28 @@ export class ComerciosController {
   constructor(private readonly comerciosService: ComerciosService) {}
 
   @Get ()
-  findAll(): Comercio[] {
-    return this.comerciosService.buscarTodosLosComercios();
+  async findAll(): Promise<Comercio[]> {
+    return await this.comerciosService.buscarTodosLosComercios();
   }
 
   @Get ("/:id")
-    findById(@Param("id") id: string): Comercio {
-      return this.comerciosService.buscarComercioPorId(Number(id));
+    async findById(@Param("id") id: string): Promise<Comercio | null> {
+      return await this.comerciosService.buscarComercioPorId((id));
     }
 
   @Post ()
-    create(@Body() body: CreateComercioDTO): boolean {
-      return this.comerciosService.crearComercio(body);
+    async create(@Body() body: CreateComercioDTO): Promise<Comercio> {
+      return await this.comerciosService.crearComercio(body);
     }
 
   @Put("/:id")
-    update(@Param("id") id: string, @Body() body: UpdateComercioDTO): boolean {
-      return this.comerciosService.modificarComercio(Number(id), body);
+    async update(@Param("id") id: string, @Body() body: UpdateComercioDTO): Promise<Comercio> {
+      return await this.comerciosService.modificarComercio(id, body);
     }
 
   @Delete("/:id")
-    delete(@Param("id") id: string): boolean {
-      return this.comerciosService.eliminarComercio(Number(id));
+    async delete(@Param("id") id: string): Promise <boolean> {
+      return await this.comerciosService.eliminarComercio(id);
     }
 
 }

@@ -1,18 +1,28 @@
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { HydratedDocument } from "mongoose";
+
+export type ComercioDocument = HydratedDocument<Comercio>;
+
+@Schema({
+    collection: 'comercios',
+    versionKey: false
+})
 export class Comercio {
-    id!: number;
-    fechaAlta: Date;
+    _id!: string;
+
+    @Prop({ required: true })
+    fechaAlta: string;
+
+    @Prop({ required: true, trim: true })
     nombre: string;
     
     constructor(
         nombre: string,
     ) {
-        this.fechaAlta = new Date();
+        this.fechaAlta = Date();
         this.nombre = nombre;
     }
 
-    setId(id: number) {
-        this.id = id;
-    }
-
-
 }
+
+    export const ComercioSchema = SchemaFactory.createForClass(Comercio);
