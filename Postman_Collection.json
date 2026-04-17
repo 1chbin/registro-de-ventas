@@ -1,0 +1,164 @@
+{
+  "info": {
+    "_postman_id": "comercios-module-collection",
+    "name": "Registro de Ventas - Módulo Comercios",
+    "description": "Colección de endpoints para probar el módulo de comercios del sistema de registro de ventas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12345678"
+  },
+  "item": [
+    {
+      "name": "Comercios",
+      "item": [
+        {
+          "name": "Obtener todos los comercios",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/comercios",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "comercios"
+              ]
+            },
+            "description": "Obtiene la lista de todos los comercios registrados en el sistema"
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener comercio por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/comercios/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "comercios",
+                "1"
+              ]
+            },
+            "description": "Obtiene un comercio específico por su ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Crear nuevo comercio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Mi Comercio\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/comercios",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "comercios"
+              ]
+            },
+            "description": "Crea un nuevo comercio en el sistema. Requiere un nombre válido"
+          },
+          "response": []
+        },
+        {
+          "name": "Actualizar comercio",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Comercio Actualizado\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/comercios/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "comercios",
+                "1"
+              ]
+            },
+            "description": "Actualiza la información de un comercio existente"
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar comercio",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/comercios/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "comercios",
+                "1"
+              ]
+            },
+            "description": "Elimina un comercio del sistema"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints CRUD para la gestión de comercios"
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "comercio_id",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}
