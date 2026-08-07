@@ -23,6 +23,9 @@ export class Producto {
     @Prop({ required: true, trim: true })
     descripcion: string;
 
+    @Prop({ default: '', trim: true })
+    image: string;
+
     @Prop({ required: true, trim: true })
     comercioId: string;
 
@@ -42,6 +45,7 @@ export class Producto {
         this.fechaAlta = Date();
         this.nombre = nombre;
         this.descripcion = descripcion;
+        this.image = '';
         this.comercioId = comercioId;
         this.sku = sku;
         this.tipo = tipo;

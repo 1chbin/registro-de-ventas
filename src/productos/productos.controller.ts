@@ -1,34 +1,59 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductosService } from './productos.service';
 import { CreateProductoDto } from './dto/create-producto.dto';
 import { UpdateProductoDto } from './dto/update-producto.dto';
+import { Producto } from './producto.model';
+import type { ArchivoImagen } from './types/archivo-imagen.type';
 
 @Controller('productos')
 export class ProductosController {
   constructor(private readonly productosService: ProductosService) {}
 
   @Post()
-  create(@Body() createProductoDto: CreateProductoDto) {
-    return this.productosService.create(createProductoDto);
+  async crearProducto(@Body() createProductoDto: CreateProductoDto) {
+    return this.productosService.crearProducto(createProductoDto);
+  }
+
+  @Post(':id/imagen')
+  @UseInterceptors(FileInterceptor('imagen'))
+  async subirImagen(
+    @Param('id') id: string,
+    @UploadedFile() imagen: ArchivoImagen,
+  ): Promise<Producto> {
+    return this.productosService.subirImagen(id, imagen);
   }
 
   @Get()
-  findAll() {
+  async findAll(): Promise<Producto[]> {
     return this.productosService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productosService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<Producto | null> {
+    return this.productosService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductoDto: UpdateProductoDto) {
-    return this.productosService.update(+id, updateProductoDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateProductoDto: UpdateProductoDto,
+  ): Promise<Producto | null> {
+    return this.productosService.update(id, updateProductoDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productosService.remove(+id);
+  async remove(@Param('id') id: string): Promise<boolean> {
+    return this.productosService.remove(id);
   }
 }
