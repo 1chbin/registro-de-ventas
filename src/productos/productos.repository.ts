@@ -31,4 +31,12 @@ import { Producto, ProductoDocument } from "./producto.model";
             const eliminado = await this.productoModel.findByIdAndDelete(id).lean().exec();
             return Boolean(eliminado);
         }
+
+        async decrementarStock(id: string, cantidad: number): Promise<Producto | null> {
+            return this.productoModel.findOneAndUpdate(
+                { _id: id, stock: { $gte: cantidad } },
+                { $inc: { stock: -cantidad } },
+                { new: true, runValidators: true },
+            ).lean().exec();
+        }
     }
