@@ -27,14 +27,13 @@ export class ProductosService {
       body.descripcion,
       body.sku,
       body.tipo,
+      Number(body.precio),
+      Number(body.stock),
     );
     return this.productosRepository.save(producto);
   }
 
-  async subirImagen(
-    id: string,
-    archivo: ArchivoImagen,
-  ): Promise<Producto> {
+  async subirImagen(id: string, archivo: ArchivoImagen): Promise<Producto> {
     const producto = await this.productosRepository.findById(id);
     if (!producto) {
       throw new NotFoundException('Producto no encontrado');

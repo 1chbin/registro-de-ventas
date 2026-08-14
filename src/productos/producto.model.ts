@@ -35,12 +35,20 @@ export class Producto {
     @Prop({ required: true, enum: TipoDeProducto })
     tipo: TipoDeProducto;
 
+    @Prop({ required: true })
+    precio: number;
+
+    @Prop({ required: true })
+    stock: number;
+
     constructor(
         nombre: string,
         comercioId: string,
         descripcion: string,
         sku: string,
         tipo: TipoDeProducto,
+        precio: number,
+        stock: number,
     ) {
         this.fechaAlta = Date();
         this.nombre = nombre;
@@ -49,6 +57,8 @@ export class Producto {
         this.comercioId = comercioId;
         this.sku = sku;
         this.tipo = tipo;
+        this.precio = precio;
+        this.stock = stock;
     }
 
 }

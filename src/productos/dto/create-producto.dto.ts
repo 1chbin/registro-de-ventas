@@ -6,4 +6,6 @@ export class CreateProductoDto {
     descripcion: string;
     sku: string;
     tipo: TipoDeProducto;
+    precio: number;
+    stock: number;
 }
