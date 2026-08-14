@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { VentaItem, VentaItemSchema } from './venta-item.model';
 
 export type VentaDocument = HydratedDocument<Venta>;
 
@@ -7,28 +8,19 @@ export type VentaDocument = HydratedDocument<Venta>;
 export class Venta {
     _id!: string;
 
-    @Prop({ required: true, trim: true })
-    productoId: string;
+    @Prop({ required: true, default: () => new Date() })
+    fecha: Date;
 
-    @Prop({ required: true, min: 1 })
-    cantidad: number;
-
-    @Prop({ required: true, min: 0 })
-    precioUnitario: number;
+    @Prop({ type: [VentaItemSchema], required: true })
+    items: VentaItem[];
 
     @Prop({ required: true, min: 0 })
-    subtotal: number;
+    total: number;
 
-    constructor(
-        productoId: string,
-        cantidad: number,
-        precioUnitario: number,
-        subtotal: number,
-    ) {
-        this.productoId = productoId;
-        this.cantidad = cantidad;
-        this.precioUnitario = precioUnitario;
-        this.subtotal = subtotal;
+    constructor(items: VentaItem[], total: number) {
+        this.fecha = new Date();
+        this.items = items;
+        this.total = total;
     }
 }
 

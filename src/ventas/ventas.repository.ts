@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { Venta, VentaDocument } from "./ventas.model";
+import { Venta } from "./ventas.model";
 
 @Injectable()
     export class VentasRepository {
 
         constructor(
-            @InjectModel(Venta.name) private readonly ventaModel: Model<VentaDocument>
+            @InjectModel(Venta.name) private readonly ventaModel: Model<Venta>
         ) {}
 
         async save(venta: Venta): Promise<Venta>{

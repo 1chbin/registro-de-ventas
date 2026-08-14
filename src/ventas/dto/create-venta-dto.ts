@@ -1,4 +1,5 @@
+import { CreateVentaItemDto } from "./create-venta-item.dto";
+
 export class CreateVentaDto {
-    productoId: string;
-    cantidad: number;
+    items: CreateVentaItemDto[];
 }

@@ -9,6 +9,7 @@ import { Venta } from './ventas.model';
 import { CreateVentaDto } from './dto/create-venta-dto';
 import { UpdateVentaDto } from './dto/update-venta-dto';
 import { ProductosRepository } from '../productos/productos.repository';
+import { VentaItem } from './venta-item.model';
 
 @Injectable()
 export class VentasService {
@@ -30,43 +31,63 @@ export class VentasService {
     }
 
     async crearVenta(body: CreateVentaDto): Promise<Venta> {
-        if (body.cantidad <= 0) {
-            throw new BadRequestException('La cantidad debe ser mayor a 0');
+
+//------------------ Validaciones ------------------
+
+        if (!body.items?.length) {
+            throw new BadRequestException('La venta debe tener al menos un producto');
         }
 
-        const producto = await this.productosRepository.findById(body.productoId);
-        if (!producto) {
-            throw new NotFoundException('Producto no encontrado');
-        }
+        const itemsResueltos: VentaItem[] = [];
 
-        if (producto.stock < body.cantidad) {
-            throw new ConflictException({
-                mensaje: 'Stock insuficiente',
-                stockDisponible: producto.stock,
-                cantidadSolicitada: body.cantidad,
+        for (const item of body.items) {
+            if (item.cantidad <= 0) {
+                throw new BadRequestException('La cantidad debe ser mayor a 0');
+            }
+
+            const producto = await this.productosRepository.findById(item.productoId);
+            if (!producto) {
+                throw new NotFoundException(`Producto ${item.productoId} no encontrado`);
+            }
+
+            if (producto.stock < item.cantidad) {
+                throw new ConflictException({
+                    mensaje: 'Stock insuficiente',
+                    productoId: item.productoId,
+                    stockDisponible: producto.stock,
+                    cantidadSolicitada: item.cantidad,
+                });
+            }
+
+//------------------ Fin de validaciones ------------------
+
+            itemsResueltos.push({
+                productoId: item.productoId,
+                cantidad: item.cantidad,
+                precioUnitario: producto.precio,
+                subtotal: producto.precio * item.cantidad,
             });
         }
 
-        const precioUnitario = producto.precio;
-        const subtotal = precioUnitario * body.cantidad;
-
-        const productoActualizado = await this.productosRepository.decrementarStock(
-            body.productoId,
-            body.cantidad,
-        );
-
-        if (!productoActualizado) {
-            throw new ConflictException('Stock insuficiente');
+        // Los descontamos
+        for (const item of itemsResueltos) {
+            const actualizado = await this.productosRepository.decrementarStock(
+                item.productoId,
+                item.cantidad,
+            );
+            if (!actualizado) {
+                throw new ConflictException({
+                    mensaje: 'Stock insuficiente',
+                    productoId: item.productoId,
+                });
+            }
         }
 
-        const venta = new Venta(
-            body.productoId,
-            body.cantidad,
-            precioUnitario,
-            subtotal,
-        );
+        // Calculos del total
+        const total = itemsResueltos.reduce((acc, i) => acc + i.subtotal, 0);
+        const venta = new Venta(itemsResueltos, total);
 
-        return await this.repository.save(venta);
+        return this.repository.save(venta);
     }
 
     async modificarVenta(id: string, body: UpdateVentaDto): Promise<Venta> {
