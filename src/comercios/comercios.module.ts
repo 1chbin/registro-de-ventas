@@ -9,5 +9,6 @@ import { Comercio, ComercioSchema } from './comercio.model';
   imports: [ MongooseModule.forFeature([{ name: Comercio.name, schema: ComercioSchema }])],
   controllers: [ComerciosController],
   providers: [ComerciosService, ComerciosRepository],
+  exports: [ComerciosService, ComerciosRepository],
 })
 export class ComerciosModule {}

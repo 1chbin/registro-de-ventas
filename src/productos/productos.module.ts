@@ -6,11 +6,13 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ProductosRepository } from './productos.repository';
 import { ProductosImagesService } from './productos-images.service';
 import { AiModule } from '../ai/ai.module';
+import { ComerciosModule } from '../comercios/comercios.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Producto.name, schema: ProductoSchema }]),
     AiModule,
+    ComerciosModule,
   ],
   controllers: [ProductosController],
   providers: [ProductosService, ProductosRepository, ProductosImagesService],

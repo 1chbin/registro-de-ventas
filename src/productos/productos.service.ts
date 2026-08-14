@@ -11,6 +11,7 @@ import { Producto } from './producto.model';
 import { ProductosImagesService } from './productos-images.service';
 import { AiService } from '../ai/ai.service';
 import type { ArchivoImagen } from './types/archivo-imagen.type';
+import { ComerciosRepository } from '../comercios/comercios.repository';
 
 @Injectable()
 export class ProductosService {
@@ -18,9 +19,16 @@ export class ProductosService {
     private readonly productosRepository: ProductosRepository,
     private readonly productosImagesService: ProductosImagesService,
     private readonly aiService: AiService,
+    private readonly comerciosRepository: ComerciosRepository,
   ) {}
 
   async crearProducto(body: CreateProductoDto): Promise<Producto> {
+
+    const comercio = await this.comerciosRepository.findById(body.comercioId);
+    if (!comercio) {
+      throw new NotFoundException('Comercio no encontrado');
+    }
+
     const producto = new Producto(
       body.nombre,
       body.comercioId,
