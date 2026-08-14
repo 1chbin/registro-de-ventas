@@ -27,8 +27,8 @@ export class ProductosService {
       body.descripcion,
       body.sku,
       body.tipo,
-      body.stock ?? 0,
       body.precio ?? 0,
+      body.stock ?? 0,
     );
     return this.productosRepository.save(producto);
   }

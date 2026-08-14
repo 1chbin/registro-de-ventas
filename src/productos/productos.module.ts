@@ -14,5 +14,6 @@ import { AiModule } from '../ai/ai.module';
   ],
   controllers: [ProductosController],
   providers: [ProductosService, ProductosRepository, ProductosImagesService],
+  exports: [ProductosRepository],
 })
 export class ProductosModule {}
